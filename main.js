@@ -102,7 +102,8 @@ container.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
-controls.maxPolarAngle = Math.PI / 2.05;
+controls.minPolarAngle = 0.12;
+controls.maxPolarAngle = Math.PI - 0.12;
 controls.minDistance = 6;
 controls.maxDistance = 40;
 controls.target.set(0, 0, 8);
@@ -132,8 +133,8 @@ function updateWasdCamera(dt) {
   camSpherical.theta += dAzimuth;
   camSpherical.phi = THREE.MathUtils.clamp(
     camSpherical.phi + dPolar,
-    0.2,
-    Math.PI / 2.05
+    0.12,
+    Math.PI - 0.12
   );
   camOffset.setFromSpherical(camSpherical);
   camera.position.copy(controls.target).add(camOffset);
@@ -163,12 +164,13 @@ function setCameraGoals(bx, bz, viewAngle, immediate = false) {
 setCameraGoals(0, 8, 0, true);
 
 // ---------------------------------------------------------------------------
-// Sky — cloudy.png cubemap cross texture
+// Sky — cubemap from cloudy.png
 // ---------------------------------------------------------------------------
 
 const skybox = await loadSkybox();
 scene.background = skybox;
 scene.environment = skybox;
+scene.fog = new THREE.Fog(0xc8dff5, 45, 140);
 
 const SUN_POSITION = new THREE.Vector3(30, 50, -20);
 
